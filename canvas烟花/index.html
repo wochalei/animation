@@ -37,8 +37,11 @@
     canvas.width = cw;
     canvas.height = ch;
     let hue = 120;
+    //烟花存放点
     const fireworks = [];
+    //爆炸对象存放点
     const particles = [];
+    //一次屏幕最多出现几个烟花
     const maxLimit = 8;
     /* 两点间距离 */
     function calculateDistance(sx, sy, dx, dy) {
@@ -103,21 +106,23 @@
         }
         update(index) {
 
-
+            //加速度公式不是这样，如果要用公式就得获取每秒渲染多少次，然后再除以次数，把s秒单位换成帧
             this.speed = this.speed * this.a
             const vx = Math.cos(this.angle) * this.speed;
             //不要写成sign 怪不得角度和终点老不对
             const vy = Math.sin(this.angle) * this.speed;
-
+            //已经被draw的坐标出队
             this.list.pop();
+            //入队新坐标  保持队列数值新状态
             this.list.unshift({ sx: this.x, sy: this.y })
             this.distanceToCurrent = calculateDistance(this.sx, this.sy, this.x, this.y);
+           
             if (this.targetRadius < 8) {
                 this.targetRadius += 0.3
             } else {
                 this.targetRadius = 1
             }
-
+            // 停止条件判断
             if (this.distanceToCurrent >= this.distanceToTarget) {
                 createParticles(this.dx,this.dy);
                 fireworks.splice(index, 1)
@@ -179,6 +184,7 @@
       
     function run() {
         hue++;
+        //清除画布
         ctx.fillStyle = 'rgb(0,0,0,0.5)';
         ctx.fillRect(0, 0, cw, ch);
         /* ctx.clearRect(0, 0, cw, ch); */
@@ -202,6 +208,7 @@
         requestAnimationFrame(run);
     }
     run();
+    /* 点击生成烟花 */
     canvas.addEventListener('mousedown',({pageX,pageY})=>{
         
         let dx = pageX-canvas.offsetLeft;
