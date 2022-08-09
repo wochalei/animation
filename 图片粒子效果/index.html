@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            background: #000;
+        }
+    </style>
+     <script src="./data.js"></script>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+
+</html>
+<script type="module">
+    /* import data from './data.js' */
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext('2d');
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const lizhis = [];
+    let status = false;
+    canvas.width = vw;
+    canvas.height = vh;
+
+    class Lizhi {
+        constructor(sx, sy, dx, dy) {
+            /* 当前位置坐标（时刻更新） */
+            this.x = sx;
+            this.y = sy;
+            /* 起点坐标 */
+            this.sx = sx;
+            this.sy = sy;
+            /* 终点坐标 */
+            this.dx = dx;
+            this.dy = dy;
+            /* 粒子半径 */
+            this.r = 1;
+            /* 颜色 */
+            this.color = '#db5a6b';
+            /* 不同轴加速度 */
+            this.ax =  Math.random(0,1)*1;
+            this.ay = Math.random(0,1)*1;
+            /*  */
+        }
+        draw() {
+            ctx.save()
+            ctx.translate(this.x, this.y);
+            ctx.beginPath();
+            ctx.fillStyle = this.color;
+            ctx.arc(0, 0, this.r, 0, Math.PI * 2);
+            ctx.fill()
+            ctx.restore()
+        }
+        update() {
+            if (status) {
+                /* 核心算法 来回转 */
+                this.x += this.ax * (this.sx - this.x);
+                this.y += this.ay * (this.sy - this.y);
+            } else {
+                this.x += this.ax * (this.dx - this.x);
+                this.y += this.ay * (this.dy - this.y);
+ 
+            }
+
+        }
+    }
+ 
+    function createLizhis() {
+        const length = data.length;
+        /* 根据生成的像素点位置 让粒子移动 */
+        for (let i = 0; i < length; i++) {
+            lizhis.push(new Lizhi(0, 0,data[i][0]+50,data[i][1]+20));
+        }
+    }
+
+    createLizhis();
+    function run() {
+        ctx.fillStyle = 'rgb(0,0,0)';
+        ctx.fillRect(0, 0, vw, vh);
+        const length = data.length;
+        /* 这个很卡，因为这个length至少3w个 
+        js又是单线程，3w个不断调用 ，然后又递归重新遍历
+        可以还是同步绘制所有3w个粒子对象的某帧 不断递归
+        */
+        for (let i = 0; i <length; i++) {
+            lizhis[i].draw();
+            lizhis[i].update();
+        }
+        requestAnimationFrame(run)
+    }
+
+    run();
+    canvas.addEventListener('click', () => { status = !status })
+
+</script>
