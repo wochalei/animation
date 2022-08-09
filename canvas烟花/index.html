@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #canvas {
+            /* 默认inline 这个再设置宽高会有滚动条  本来inline不能设置宽高的，他这里生效应该是其他原因*/
+
+
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgb(0, 0, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+
+</html>
+<script>
+    const canvas = document.querySelector('#canvas');
+    const ctx = canvas.getContext('2d');
+    const cw = window.innerWidth;
+    const ch = window.innerHeight;
+    canvas.width = cw;
+    canvas.height = ch;
+    let hue = 120;
+    const fireworks = [];
+    const particles = [];
+    const maxLimit = 8;
+    /* 两点间距离 */
+    function calculateDistance(sx, sy, dx, dy) {
+        return Math.sqrt(Math.pow(dx - sx, 2) + Math.pow(dy - sy, 2));
+    }
+    /* 生成范围随机树 */
+    function random(x, y) {
+        return Math.random() * (y - x) + x;
+    }
+    function createParticles(x,y) {
+        const count = random(30,80);
+            for (let i = 0; i < count; i++) {
+                // 创建一个烟花，起始点在底部中间位置，终点为随机位置
+                particles.push(new Particle(x,y))   
+            }
+           
+        }
+    class Firework {
+        //起点坐标，终点坐标
+        constructor(sx, sy, dx, dy) {
+            /* 当前位置坐标（时刻更新） */
+            this.x = sx;
+            this.y = sy;
+            /* 起点坐标 */
+            this.sx = sx;
+            this.sy = sy;
+            /* 终点坐标 */
+            this.dx = dx;
+            this.dy = dy;
+            /* 角度 */
+            this.angle = Math.atan2(dy - sy, dx - sx);
+            /* 速度，加速度 */
+            this.speed = 2;
+            this.a = 1.03;
+            // hsl模式的灰度值，随机一个
+            this.hue = random(hue - 20, hue + 20)
+            /* 亮度 */
+            this.brightness = random(50, 70);
+            /* 总距离 */
+            this.distanceToTarget = calculateDistance(sx, sy, dx, dy);
+            /* 已走距离 */
+            this.distanceToCurrent = 0;
+            /* 更新队列 */
+            /* 因为绘制动态线段要时刻获取最新的坐标和上一个坐标位置，所以弄个队列 新值入队，旧值出队 */
+            this.list = [{ sx, sy }, { sx, sy }]
+
+            /* 终点圆的半径 */
+            this.targetRadius = 1;
+          
+        }
+        draw() {
+
+            const { sx, sy } = this.list[this.list.length - 1];
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(this.x, this.y);
+            ctx.strokeStyle = 'hsl(' + hue + ',100%,' + this.brightness + '%)';//这里要对变量进行拼接
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(this.dx, this.dy, this.targetRadius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+        update(index) {
+
+
+            this.speed = this.speed * this.a
+            const vx = Math.cos(this.angle) * this.speed;
+            //不要写成sign 怪不得角度和终点老不对
+            const vy = Math.sin(this.angle) * this.speed;
+
+            this.list.pop();
+            this.list.unshift({ sx: this.x, sy: this.y })
+            this.distanceToCurrent = calculateDistance(this.sx, this.sy, this.x, this.y);
+            if (this.targetRadius < 8) {
+                this.targetRadius += 0.3
+            } else {
+                this.targetRadius = 1
+            }
+
+            if (this.distanceToCurrent >= this.distanceToTarget) {
+                createParticles(this.dx,this.dy);
+                fireworks.splice(index, 1)
+                
+            } else {
+                this.x += vx;
+                this.y += vy;
+            }
+        }
+    }
+    class Particle {
+        constructor(sx, sy) {
+            // 当前坐标
+            this.x = sx;
+            this.y = sy;
+            // 角度
+            this.angle = random(0, Math.PI * 2);
+            // 速度
+            this.speed = random(1, 10)
+            // 摩擦系数
+            this.friction = 0.95
+            // 重力加速度
+            this.gravity = 1;
+            // hsl模式的灰度值，随机一个
+            this.hue = random(hue - 20, hue + 20)
+            // 亮度
+            this.brightness = random(50, 80)
+            // 透明度
+            this.alpha = 1;
+            // 亮度的衰变率
+            this.decay = random(0.015, 0.03)
+            this.list = [{ sx, sy }, { sx, sy }]
+        }
+        draw(){
+            const { sx, sy } = this.list[this.list.length - 1];
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(this.x, this.y);
+            ctx.strokeStyle = 'hsl(' + hue + ',100%,' + this.brightness + '%,'+this.alpha+')';//这里要对变量进行拼接
+            ctx.stroke();
+        }
+        update(index){
+          this.speed *= this.friction;
+          const vx = this.speed*Math.cos(this.angle);
+          const vy = this.speed*Math.sin(this.angle)+this.gravity;
+          this.x += vx;
+          this.y += vy;
+          this.list.pop();
+          this.list.unshift({sx:this.x,sy:this.y});
+          this.alpha-=this.decay;
+          if(this.alpha<=0){
+        
+          particles.splice(index,1);
+    
+        }
+        }
+    }
+
+      
+    function run() {
+        hue++;
+        ctx.fillStyle = 'rgb(0,0,0,0.5)';
+        ctx.fillRect(0, 0, cw, ch);
+        /* ctx.clearRect(0, 0, cw, ch); */
+        let i = fireworks.length;
+        let k = particles.length;
+        while (i--) {
+            fireworks[i].draw();
+            fireworks[i].update(i);
+        }
+        while (k--) {
+            particles[k].draw();
+            particles[k].update(k);
+        }
+        if(fireworks.length<=maxLimit){
+           
+            fireworks.push(new Firework(cw/2,ch,random(0,cw),random(0,ch/2)))
+            
+        }else{
+             
+        }
+        requestAnimationFrame(run);
+    }
+    run();
+    canvas.addEventListener('mousedown',({pageX,pageY})=>{
+        
+        let dx = pageX-canvas.offsetLeft;
+        let dy = pageY-canvas.offsetTop; 
+       
+        fireworks.push( new Firework( cw / 2, ch, dx,dy ) )
+    })
+</script>

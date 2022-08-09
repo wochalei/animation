@@ -1,0 +1,416 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    animation: bg-change 3s infinite linear;
+}
+@keyframes bg-change {
+    0%,12%{
+        background-color: #fff;
+    }
+    13%{
+        background-color: #000;
+    }
+    51%{
+        background-color: #000;
+    }
+    54%{
+        background-color: #fff;
+    }
+}
+.wrap{
+    position: relative;
+    width: 350px;
+    height: 300px;
+    
+}
+/* 背景 */
+.wave{
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    border:8px solid rgba(255, 255, 255, 0.2) ;
+    animation:  wave-dark 3s infinite linear;
+    opacity: 0;
+}
+/* scale加border快速帧执行动画有波浪效果 */
+@keyframes wave-dark {
+    0%,50%{
+       transform: scale(0.4,0.4);
+       opacity: 0;
+    }
+    52%{
+        opacity: 1;
+        transform: scale(0.8,0.8);
+    }
+    54%{
+        transform: scale(1,1);
+    }
+}
+/* 地板 */
+.floor{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 5px;
+    background: #673C63;
+    box-shadow: 0px 2px 5px #111;
+}
+/* 蜡烛区域 */
+.candles{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+    height: calc(100% - 5px);
+}
+/* 蜡烛1 */
+.candle1{
+    position: absolute;
+    left: 60%;
+    bottom: 0;
+    width: 30px;
+    height: 95px;
+    background: #fff;
+    border: 3px solid #673C63;
+    border-bottom: 0px;
+    border-radius: 3px;
+    transform-origin: bottom;
+    box-shadow: -2px 0px 0px #95c6f2 inset;
+    animation: expand-body 3s infinite linear;;
+}
+@keyframes expand-body{
+    10%{
+       transform: scale(1.1,1.1);
+    }
+    15%{
+        transform:  scale(0.9,0.9); 
+    }
+    20%{
+        transform:  scale(1,1); 
+    }
+    25%{
+        transform:  scale(0.95,0.95); 
+    }
+    30%{
+        transform:  scale(1,1); 
+    }
+
+}
+.eye1_left,.eye1_right{
+    position: absolute;
+    left: 20%;
+    top: 10%;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background: #673C63;
+  
+    animation: blink-eyes 3s infinite linear;
+}
+@keyframes blink-eyes{
+    5%{
+        opacity: 0;
+    }
+    10%{
+        opacity: 1;
+        transform: translateX(0%);
+    }
+    15%{
+        transform: translateX(-100%);
+    }
+    20%{
+        transform: translateX(0%);
+    }
+
+}
+.eye1_right{
+    left: 60%
+}
+.candle1_stick{
+    left: 50%;
+    transform: translate(-50%,-100%);
+    position: absolute;
+    width: 3px;
+    height: 15px;
+    background: #673C63;
+    border-radius: 8px;
+}
+.candle_mouth{
+    position: absolute;
+    top: 25%;
+    left: 20%;
+    width: 0px;
+    height: 0px;
+    border-radius: 20px;
+    background: #673C63;
+    animation: uff 3s infinite linear;
+}
+@keyframes uff {
+    10%{
+        width: 15px;
+        height: 15px;
+    }
+    13%{
+        width: 0px;
+        height: 0px;
+        left: 10%;
+    }
+
+}
+/* 蜡烛2 */
+
+.candle2{
+    position: absolute;
+    left: 40%;
+    bottom: 0;
+    width: 35px;
+    height: 55px;
+    background: #fff;
+    border: 3px solid #673C63;
+    border-bottom: 0px;
+    border-radius: 3px;
+    box-shadow: -2px 0px 0px #95c6f2 inset;
+    transform-origin: bottom;
+    animation:  move-left 3s infinite linear;
+}
+@keyframes move-left{
+    13%{
+        transform: translateX(0%) scale(1,1);
+    }
+    15%{
+      transform: translateX(-10%)  scale(1,1);
+    }
+    25%{
+        transform: translateX(0%) scale(1,1);
+
+    }
+    35%{
+        transform: translateX(0%) scale(1,1);
+    }
+    40%{
+        transform: translateX(0%) scale(1.2,0.9);
+        background: #fff;
+        box-shadow: -2px 0px 0px #95c6f2 inset;
+        border-color:  #673C63;
+    }
+    50%{
+        transform: translateX(0%) scale(1.3,0.85);
+        background: #f44336;
+        box-shadow: -2px 0px 0px #f44336 inset;
+     
+    }
+    52%{
+        transform: translateX(0%) scale(0.8,1.2);
+        background: #fff;
+        box-shadow: -2px 0px 0px #95c6f2 inset;
+        border-color: #673C63;
+    }
+    54%{
+        transform: translateX(0%) scale(1,1);
+    }
+}
+
+.eye2_left,.eye2_right{
+    position: absolute;
+    left: 20%;
+    top: 20%;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background-color: #673C63;
+    border-style:solid;
+    border-width: 0 0px 0px 0;
+    transform-origin:center;
+}
+.eye2_left{
+    animation: eye-left 3s infinite linear;
+}
+@keyframes eye-left{
+    0%,24%{
+
+        border-radius: 100%;
+        background-color: #673C63;
+        border-style:solid;
+        border-width: 0 0px 0px 0;
+
+    } 
+    25%{
+        border-radius: 0px;
+        background-color: transparent;
+        border-width: 0 2px 2px 0;
+        border-color:#673C63;
+        transform: rotate(-45deg) translate(0%);
+    }
+    50%{
+        border-radius: 0px;
+        background-color: transparent;
+        border-width: 0 2px 2px 0;
+        border-color:#673C63;
+        transform: rotate(-45deg) translate(-20%,-20%);
+    }
+    51%{
+        transform:  translateX(0%);
+        border-radius: 100%;
+        background-color: #673C63;
+        border-style:solid;
+        border-width: 0 0px 0px 0;
+    }
+}
+.eye2_right{
+    left: 60%;
+    animation: eye-right 3s infinite linear;
+}
+@keyframes eye-right{
+    0%,24%{
+
+        border-radius: 100%;
+        background-color: #673C63;
+        border-style:solid;
+        border-width: 0 0px 0px 0;
+
+    } 
+    25%{
+        border-radius: 0px;
+        background-color: transparent;
+        border-width: 0 2px 2px 0;
+        border-color:#673C63;
+        transform: rotate(135deg) ;
+    }
+    50%{
+        border-radius: 0px;
+        background-color: transparent;
+        border-width: 0 2px 2px 0;
+        border-color:#673C63;
+        transform: rotate(135deg) translate(-20%,-20%);
+    }
+    51%{
+        transform:  translateX(0%);
+        border-radius: 100%;
+        background-color: #673C63;
+        border-style:solid;
+        border-width: 0 0px 0px 0;
+    }
+}
+.candle2_stick{
+    left: 50%;
+    transform: translate(-50%,-100%);
+    position: absolute;
+    width: 3px;
+    height: 10px;
+    background: #673C63;
+    border-radius: 8px;
+    transform-origin: bottom;
+    animation: stick-change 3s infinite linear;
+}
+@keyframes stick-change{
+    0%,10%,35%{
+        transform: translate(-50%,-100%);
+    }
+    13%{
+        transform: translate(-50%,-100%) rotate(-45deg);
+    }
+    14%{
+        transform: translate(-50%,-100%) rotate(0deg);
+    }
+    50%{
+        transform:  translate(-50%,-100%) rotate(135deg);
+        
+    }
+    52%{
+        transform:  translate(-50%,-100%) rotate(0deg);
+    }
+}
+.fire{
+    position: absolute;
+    width: 16px;
+    height: 20px;
+    left: 50%;
+    top: -10%;
+    transform: translate(-50%,-100%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: #ff9800;
+    z-index: 15;
+    transform-origin: bottom;
+    animation: stick-fire 3s infinite linear;
+}
+@keyframes stick-fire{
+    13%,52%{
+        opacity: 1 ;
+    }
+    15%,51%{
+        opacity: 0;
+    }
+    90%, 0%, 7%, 15%, 23%, 31%, 39%, 47%, 55% {
+        transform: translate(-50%,-100%) rotate(2deg);
+        background: #FFC107;
+    }
+    94%, 3%, 11%, 19%, 27%, 35%, 43%, 51%, 58% {
+        transform: translate(-50%,-100%) rotate(-2deg);
+        background: #FF9800;
+    }
+}
+.candle_smoke1{
+    position: absolute;
+    bottom:  24%;
+    left: 40%;
+    width: 30px;
+    height: 3px;
+    background: grey;
+    animation:  smoke1 3s infinite linear;
+    opacity: 0;
+}
+@keyframes smoke1{
+  0%,10%{
+     left: 40%;
+     opacity: 0;
+  }
+  18%{
+    left: 20%;
+    height: 3px;
+    width: 8px;
+    opacity: 1;
+  }
+  20%{
+    opacity: 0;
+  }
+}
+.candle_smoke2{
+    position: absolute;
+    bottom:  28%;
+    left: 42.5%;
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+    background: grey;
+    animation:  smoke2 3s infinite linear;
+    opacity: 0;
+}
+@keyframes smoke2{
+    0%,10%{
+        bottom:  28%;
+       opacity: 0;
+    }
+    18%{
+    left: 35%;
+    bottom: 60%;
+    height: 10px;
+    width: 10px;
+    border-radius: 100%;
+    opacity: 0.5;
+    }
+    20%{
+
+      opacity: 0;
+    }
+  }
