@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0%;
+            margin: 0%;
+            box-sizing: border-box;
+        }
+        body{
+            position: relative;
+
+            height: 200vh;
+            background-color: teal;
+        }
+        .left,.middle,.right{
+            position: absolute;
+            top: 400px;
+            width: 20vw;
+            height: 20vh;
+        }
+        .left{
+            left: 10%;
+            background-color: tan;
+        }
+        .right{
+            left: 40%;
+            background-color: tomato;
+        }
+        .middle{
+            left: 70%;
+            background-color: chartreuse;
+        }
+    </style>
+</head>
+<body>
+    <!-- 具体看文档 -->
+    <!-- 注意默认Rellax是在body滚动轴下的 你选取的.rellax实现监听滚动，如果要改为其他容器滚动监听看文档修改 -->
+   <!-- 在节点设置 data-rellax-speed 来控制滚动速度实现滚动差 负得就反向 -->
+    <div class="left rellax" data-rellax-speed="7"  data-rellax-percentage="0.5"></div>
+    <div class="middle rellax" data-rellax-speed="-3"></div>
+    <div class="right rellax"data-rellax-speed="-10" ></div>
+   
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
+
+<script>
+    // Accepts any class name
+    var rellax = new Rellax('.rellax');
+  </script>
